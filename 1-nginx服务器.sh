@@ -1,4 +1,5 @@
 #!/bin/bash
+#nginx服务器
 yum clean all &> /dev/null
 yumr=`yum repolist 2> /dev/null | awk '/^repo/{print $2}' | sed 's/,//'`
 if [ $yumr -eq 0 ];then

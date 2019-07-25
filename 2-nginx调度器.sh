@@ -1,5 +1,6 @@
 #!/bin/bash
 #快速部署nginx调度器
+#未附加权重功能
 yum clean all &> /dev/null
 yumr=`yum repolist 2> /dev/null | awk '/^repo/{print $2}' | sed 's/,//'`
 if [ $yumr -eq 0 ];then
