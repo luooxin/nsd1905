@@ -23,6 +23,10 @@ tar -xf nginx-1.12.2.tar.gz
 cd nginx-1.12.2
 yum -y install gcc pcre-devel openssl-devel  &> /dev/null
 echo -e "\033[31m已安装源码编译依赖包\033[0m"
+yum -y install mariadb mariadb-server mariadb-devel &> /dev/null
+systemctl restart mariadb
+systemctl enable mariadb  &> /dev/null
+echo -e "\033[31m已部署数据库服务\033[0m"
 yum -y install php php-fpm php-mysql &> /dev/null
 systemctl restart php-fpm
 systemctl enable php-fpm &> /dev/null
@@ -31,13 +35,6 @@ echo -e "\033[31m已部署php服务\033[0m"
 make   &> /dev/null
 make install  &> /dev/null
 echo -e "\033[31mnginx源码编译安装成功\033[0m"
-}
-
-mariadbserver (){
-yum -y install mariadb mariadb-server mariadb-devel &> /dev/null
-systemctl restart mariadb
-systemctl enable mariadb  &> /dev/null
-echo -e "\033[31m已部署数据库服务\033[0m"
 }
 
 configure(){
@@ -50,12 +47,6 @@ sed -i 's/fastcgi_params/fastcgi.conf/'  $conf/nginx.conf
 checkyum
 checklnmptar
 Compileandinstall
-read -p "是否需要安装mariadb服务[y/n]:" h
-if [ "$h" == "y" ];then
-mariadbserver
-else
-echo "不执行安装mariadb服务"
-fi
 configure
 /usr/local/nginx/sbin/nginx  &> /dev/null
 ss -nutpl | grep :80   &> /dev/null
