@@ -9,16 +9,14 @@ if [ $yumr -eq 0 ];then
 fi
 }
 
-checklnmptar(){
-tar -xf lnmp_soft.tar.gz  &> /dev/null
-if [ $? -ne 0 ];then
-     echo -e "\033[31m未找到lnmp_soft.tar.gz或不存在\033[0m"
-     exit
+checknginx(){
+if [ ! -f nginx-1.12.2.tar.gz ];then
+echo -e "\033[31m未找到nginx源码包,脚本结束运行\033[0m"
+exit
 fi
 }
 
 Compileandinstall(){
-cd lnmp_soft
 tar -xf nginx-1.12.2.tar.gz
 cd nginx-1.12.2
 yum -y install gcc pcre-devel openssl-devel  &> /dev/null
@@ -47,8 +45,11 @@ sed -i '/SCRIPT_FILENAME/d'  $conf/nginx.conf
 sed -i 's/fastcgi_params/fastcgi.conf/'  $conf/nginx.conf
 }
 
+echo "执行该脚本需要准备可用yum源及nginx-1.12.2.tar.gz"
+read -p "是否需要继续执行该脚本[y/n]" n
+if [ $n == "y" ];then
 checkyum
-checklnmptar
+checknginx
 Compileandinstall
 read -p "是否需要安装mariadb服务[y/n]:" h
 if [ "$h" == "y" ];then
@@ -65,4 +66,7 @@ if [ $? -ne 0 ];then
    exit
 else
    echo -e "\033[31m脚本执行成功,nginx已启动\033[0m"
+fi
+else
+	exit
 fi
