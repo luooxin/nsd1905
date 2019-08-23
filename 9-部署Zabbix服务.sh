@@ -9,25 +9,24 @@ fi
 }
 
 checkrjb(){
-if [ ! -f nginx-1.12.2.tar.gz ];then
-echo -e "\033[31m未找到nginx源码包,脚本结束运行\033[0m"
-exit
+app="nginx-1.12.2.tar.gz zabbix-3.4.4.tar.gz "
+for i in $app
+do  
+if  [ ! -f $i ];then 
+echo -e "\033[31m未找到$i脚本结束运行\033[0m"
 fi
-if [ ! -f zabbix-3.4.4.tar.gz ];then
-echo -e "\033[31m未找到zabbix源码包,脚本结束运行\033[0m"
-exit
-fi
+done 
 }
 
 startlnmp(){
 tar -xf nginx-1.12.2.tar.gz
-cd nginx-1.12.2
 yum -y install gcc pcre-devel openssl-devel  &> /dev/null
 echo -e "\033[31m已安装源码编译依赖包\033[0m"
 yum -y install php php-fpm php-mysql &> /dev/null
 systemctl restart php-fpm
 systemctl enable php-fpm &> /dev/null
 echo -e "\033[31m已部署php服务\033[0m"
+cd nginx-1.12.2
 ./configure --with-http_ssl_module --with-stream --with-http_stub_status_module  &> /dev/null
 make   &> /dev/null
 make install  &> /dev/null
@@ -54,7 +53,7 @@ fi
 }
 
 startzabbix(){
-yum -y install net-snmp-devel curl-devel libevent-devel
+yum -y install net-snmp-devel curl-devel libevent-devel &> /dev/null
 tar -xf zabbix-3.4.4.tar.gz
 cd zabbix-3.4.4/
 ./configure --enable-server --enable-proxy --enable-agent --with-mysql=/usr/bin/mysql_config --with-net-snmp --with-libcurl
@@ -66,10 +65,13 @@ cd ..
 createuser(){
 mysql -e "create database zabbix character set utf8"
 mysql -e "grant all on zabbix.* to zabbix@"localhost" identified by 'zabbix'"
-cd zabbix-3.4.4/databases/mysql
+cd zabbix-3.4.4/database/mysql
 mysql -uzabbix -pzabbix zabbix < schema.sql
 mysql -uzabbix -pzabbix zabbix < images.sql
 mysql -uzabbix -pzabbix zabbix < data.sql
+cd ..
+cd ..
+cd ..
 }
 
 upzabbixphp(){
