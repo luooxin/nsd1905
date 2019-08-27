@@ -25,7 +25,7 @@ yum -y install php php-fpm php-mysql &> /dev/null
 systemctl restart php-fpm
 systemctl enable php-fpm &> /dev/null
 echo -e "\033[31m已部署php服务\033[0m"
-./configure --with-http_ssl_module --with-stream --with-http_stub_status_module  &> /dev/null
+./configure --with-http_ssl_module --with-stream --with-http_stub_status_module --without-http_autoindex_module &> /dev/null
 make   &> /dev/null
 make install  &> /dev/null
 echo -e "\033[31mnginx源码编译安装成功\033[0m"
