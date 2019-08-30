@@ -85,6 +85,7 @@ sed -i '/^max_exe/s/30/300/' /etc/php.ini
 sed -i '/^post_max/s/8M/32M/' /etc/php.ini
 sed -i '/^max_input_time/s/60/300/' /etc/php.ini
 systemctl restart php-fpm
+/usr/local/nginx/sbin/nginx -s reload
 }
 
 confmariadb(){

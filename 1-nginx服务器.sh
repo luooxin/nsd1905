@@ -29,6 +29,9 @@ echo -e "\033[31m已部署php服务\033[0m"
 make   &> /dev/null
 make install  &> /dev/null
 echo -e "\033[31mnginx源码编译安装成功\033[0m"
+echo "/usr/local/nginx/sbin/nginx" >> /etc/rc.local
+chmod +x /etc/rc.local
+echo -e "\033[31m已设置开机自启\033[0m"
 }
 
 mariadbserver (){
